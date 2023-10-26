@@ -158,7 +158,7 @@ defmodule Phoenix.LiveComponent do
           |> Repo.all()
           |> Map.new()
 
-        Enum.map(assigns_sockets, fn {assigns, sockets} ->
+        Enum.map(assigns_sockets, fn {assigns, socket} ->
           assign(socket, :user, users[assigns.id])
         end)
       end
@@ -522,5 +522,12 @@ defmodule Phoenix.LiveComponent do
             ) ::
               {:noreply, Socket.t()} | {:reply, map, Socket.t()}
 
-  @optional_callbacks mount: 1, update_many: 1, update: 2, handle_event: 3
+  @callback handle_async(
+              name :: atom,
+              async_fun_result :: {:ok, term} | {:exit, term},
+              socket :: Socket.t()
+            ) ::
+              {:noreply, Socket.t()}
+
+  @optional_callbacks mount: 1, update_many: 1, update: 2, handle_event: 3, handle_async: 3
 end
